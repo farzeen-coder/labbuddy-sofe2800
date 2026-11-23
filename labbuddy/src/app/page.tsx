@@ -10,12 +10,14 @@ const makeCode = () =>
   Array.from({ length: 6 }, () => ALPHABET[Math.floor(Math.random() * ALPHABET.length)]).join("");
 
 const input =
-  "mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100";
+  "mt-1.5 w-full rounded-lg border border-slate-700 bg-slate-950/70 px-3.5 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/30";
+
+const label = "block font-mono text-xs uppercase tracking-wider text-slate-400";
 
 const FEATURES = [
-  { icon: "✅", label: "Shared checklists" },
-  { icon: "🤝", label: "Fair task split" },
-  { icon: "⏰", label: "Deadline tracker" },
+  { id: "01", title: "checklists", text: "Pre-lab and post-lab tasks with live progress." },
+  { id: "02", title: "partner_split", text: "See who owns what and divide the work fairly." },
+  { id: "03", title: "deadlines", text: "Every due date in one place, sorted by urgency." },
 ];
 
 export default function Home() {
@@ -51,88 +53,104 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-white to-violet-50">
-      <main className="mx-auto max-w-3xl px-4 py-14">
-        <header className="text-center">
-          <h1 className="text-5xl font-bold tracking-tight text-indigo-700">
-            <span aria-hidden="true">🧪 </span>LabBuddy
-          </h1>
-          <p className="mx-auto mt-3 max-w-md text-lg text-slate-600">
-            Pre-labs, partner tasks and deadlines, all in one dashboard.
+    <div className="min-h-screen bg-slate-950 [background-image:radial-gradient(rgb(51_65_85/0.55)_1px,transparent_1px)] [background-size:24px_24px]">
+      <div className="min-h-screen bg-gradient-to-b from-indigo-500/10 via-transparent to-transparent">
+        <main className="mx-auto max-w-5xl px-6 py-16">
+          <p className="font-mono text-sm text-indigo-300">
+            <span className="text-slate-500">~/otu/</span>labbuddy
+            <span className="ml-1 inline-block h-4 w-2 translate-y-0.5 animate-pulse bg-indigo-300" aria-hidden="true" />
           </p>
-          <ul className="mt-5 flex flex-wrap justify-center gap-2">
-            {FEATURES.map((f) => (
-              <li
-                key={f.label}
-                className="rounded-full bg-white px-3.5 py-1.5 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200"
+
+          <header className="mt-8 max-w-2xl">
+            <h1 className="text-4xl font-semibold tracking-tight text-slate-50 sm:text-5xl">
+              Ship your lab reports <span className="text-indigo-300">without the chaos.</span>
+            </h1>
+            <p className="mt-4 text-lg leading-relaxed text-slate-400">
+              Pre-labs, partner tasks and deadlines, all in one shared dashboard. Built by students who were tired of
+              chasing group chats.
+            </p>
+          </header>
+
+          {error && (
+            <p
+              role="alert"
+              className="mt-8 rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-2.5 font-mono text-sm text-red-300"
+            >
+              error: {error}
+            </p>
+          )}
+
+          <div className="mt-10 grid gap-6 md:grid-cols-2">
+            <form
+              onSubmit={createLab}
+              className="space-y-4 rounded-xl border border-slate-800 bg-slate-900/70 p-6 backdrop-blur"
+            >
+              <h2 className="font-mono text-sm font-medium text-indigo-300">$ new_lab</h2>
+              <label className={label}>
+                Lab name
+                <input className={input + " font-sans normal-case tracking-normal"} value={name} onChange={(e) => setName(e.target.value)} placeholder="Circuits Lab 3" />
+              </label>
+              <label className={label}>
+                Your name
+                <input className={input + " font-sans normal-case tracking-normal"} value={p1} onChange={(e) => setP1(e.target.value)} />
+              </label>
+              <label className={label}>
+                Partner&apos;s name
+                <input className={input + " font-sans normal-case tracking-normal"} value={p2} onChange={(e) => setP2(e.target.value)} />
+              </label>
+              <button
+                disabled={busy}
+                className="w-full rounded-lg bg-indigo-500 py-2.5 font-medium text-white transition hover:bg-indigo-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 disabled:opacity-50"
               >
-                <span aria-hidden="true">{f.icon} </span>
-                {f.label}
+                {busy ? "Creating..." : "Create lab"}
+              </button>
+            </form>
+
+            <form
+              onSubmit={joinLab}
+              className="space-y-4 rounded-xl border border-slate-800 bg-slate-900/70 p-6 backdrop-blur"
+            >
+              <h2 className="font-mono text-sm font-medium text-indigo-300">$ join_lab</h2>
+              <p className="text-sm leading-relaxed text-slate-400">
+                Ask your partner for their 6-character lab code to open the same dashboard.
+              </p>
+              <label className={label}>
+                Lab code
+                <input
+                  className={input + " font-mono text-lg uppercase tracking-[0.3em]"}
+                  value={joinCode}
+                  onChange={(e) => setJoinCode(e.target.value)}
+                  maxLength={6}
+                  placeholder="ABC123"
+                />
+              </label>
+              <button className="w-full rounded-lg border border-slate-600 bg-transparent py-2.5 font-medium text-slate-100 transition hover:border-indigo-400 hover:text-indigo-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900">
+                Join lab
+              </button>
+            </form>
+          </div>
+
+          <ul className="mt-14 grid gap-6 border-t border-slate-800 pt-8 sm:grid-cols-3">
+            {FEATURES.map((f) => (
+              <li key={f.id}>
+                <p className="font-mono text-xs text-slate-500">
+                  {f.id} <span className="text-indigo-300">{f.title}</span>
+                </p>
+                <p className="mt-1.5 text-sm leading-relaxed text-slate-400">{f.text}</p>
               </li>
             ))}
           </ul>
-        </header>
 
-        {error && (
-          <p role="alert" className="mt-8 rounded-xl bg-red-50 px-4 py-2 text-red-700 ring-1 ring-red-100">
-            {error}
+          <p className="mt-12 font-mono text-xs text-slate-600">
+            // built by Clueless Commit · Ontario Tech University
           </p>
-        )}
-
-        <div className="mt-10 grid gap-6 md:grid-cols-2">
-          <form
-            onSubmit={createLab}
-            className="space-y-3 rounded-2xl bg-white/90 p-6 shadow-sm ring-1 ring-slate-200/70 transition hover:shadow-md"
-          >
-            <h2 className="text-xl font-semibold text-slate-800">Start a new lab</h2>
-            <label className="block text-sm font-medium text-slate-700">
-              Lab name
-              <input className={input} value={name} onChange={(e) => setName(e.target.value)} placeholder="Circuits Lab 3" />
-            </label>
-            <label className="block text-sm font-medium text-slate-700">
-              Your name
-              <input className={input} value={p1} onChange={(e) => setP1(e.target.value)} />
-            </label>
-            <label className="block text-sm font-medium text-slate-700">
-              Partner&apos;s name
-              <input className={input} value={p2} onChange={(e) => setP2(e.target.value)} />
-            </label>
-            <button
-              disabled={busy}
-              className="w-full rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 py-2.5 font-medium text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-indigo-200 disabled:opacity-50 disabled:hover:translate-y-0"
-            >
-              {busy ? "Creating..." : "Create lab"}
-            </button>
-          </form>
-
-          <form
-            onSubmit={joinLab}
-            className="space-y-3 rounded-2xl bg-white/90 p-6 shadow-sm ring-1 ring-slate-200/70 transition hover:shadow-md"
-          >
-            <h2 className="text-xl font-semibold text-slate-800">Join with a code</h2>
-            <p className="text-sm text-slate-500">
-              Ask your partner for their 6-character lab code and jump straight into the same dashboard.
-            </p>
-            <label className="block text-sm font-medium text-slate-700">
-              Lab code
-              <input
-                className={input + " text-center font-mono text-lg uppercase tracking-[0.3em]"}
-                value={joinCode}
-                onChange={(e) => setJoinCode(e.target.value)}
-                maxLength={6}
-                placeholder="ABC123"
-              />
-            </label>
-            <button className="w-full rounded-xl border border-indigo-600 bg-white py-2.5 font-medium text-indigo-700 transition hover:bg-indigo-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-indigo-100">
-              Join lab
-            </button>
-          </form>
-        </div>
-
-        <p className="mt-10 text-center text-sm text-slate-500">
-          Built by Clueless Commit at Ontario Tech University
-        </p>
-      </main>
+        </main>
+      </div>
     </div>
   );
 }
+
+  
+      
+         
+    
