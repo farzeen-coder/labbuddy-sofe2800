@@ -5,6 +5,8 @@ import { supabase } from "@/lib/supabase";
 import type { Lab, Task } from "@/lib/types";
 import { autoSplit } from "@/lib/autoSplit";
 
+const card = "rounded-2xl border border-white/10 bg-white/[0.07] shadow-xl shadow-black/10 backdrop-blur";
+
 export default function Partners({ lab }: { lab: Lab }) {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [error, setError] = useState("");
@@ -62,10 +64,14 @@ export default function Partners({ lab }: { lab: Lab }) {
   return (
     <div className="space-y-6">
       {error && (
-        <p role="alert" className="rounded-lg bg-red-50 px-4 py-2 text-red-700">{error}</p>
+        <p role="alert" className="rounded-lg border border-red-400/40 bg-red-500/10 px-4 py-2.5 text-sm text-red-200">
+          {error}
+        </p>
       )}
       {message && (
-        <p role="status" className="rounded-lg bg-emerald-50 px-4 py-2 text-emerald-800">{message}</p>
+        <p role="status" className="rounded-lg border border-emerald-400/40 bg-emerald-500/10 px-4 py-2.5 text-sm text-emerald-200">
+          {message}
+        </p>
       )}
 
       <div className="grid gap-4 sm:grid-cols-2">
@@ -74,61 +80,81 @@ export default function Partners({ lab }: { lab: Lab }) {
           const done = mine.filter((t) => t.done).length;
           const pct = mine.length ? Math.round((done / mine.length) * 100) : 0;
           return (
-            <div key={p} className="rounded-2xl bg-white p-5 shadow">
-              <h2 className="text-lg font-semibold">{p}</h2>
-              <p className="text-sm text-slate-600">
-                {done}/{mine.length} done ({pct}%)
-              </p>
+            <div key={p} className={`${card} p-5`}>
+              <div className="flex items-center gap-3">
+                <span
+                  aria-hidden="true"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-indigo-400/20 text-sm font-semibold uppercase text-indigo-100 ring-1 ring-indigo-300/30"
+                >
+                  {p.trim().charAt(0)}
+                </span>
+                <div className="min-w-0">
+                  <h2 className="truncate text-lg font-semibold text-white">{p}</h2>
+                  <p className="text-sm text-slate-300">
+                    {done}/{mine.length} done ({pct}%)
+                  </p>
+                </div>
+              </div>
               <div
-                className="mt-2 h-2 overflow-hidden rounded-full bg-slate-200"
+                className="mt-3 h-2 overflow-hidden rounded-full bg-white/10"
                 role="progressbar"
                 aria-valuenow={pct}
                 aria-valuemin={0}
                 aria-valuemax={100}
                 aria-label={`${p} progress`}
               >
-                <div className="h-full bg-emerald-500 transition-all" style={{ width: `${pct}%` }} />
+                <div className="h-full rounded-full bg-emerald-400 transition-all duration-500" style={{ width: `${pct}%` }} />
               </div>
             </div>
           );
         })}
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-lg font-semibold">Assign tasks</h2>
-          <p className="text-sm text-slate-500">{unassigned} open task{unassigned === 1 ? "" : "s"} without an owner</p>
+          <h2 className="text-lg font-semibold text-white">Assign tasks</h2>
+          <p className="text-sm text-slate-300">
+            {unassigned} open task{unassigned === 1 ? "" : "s"} without an owner
+          </p>
         </div>
         <button
           onClick={runAutoSplit}
           disabled={splitting || unassigned === 0}
-          className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
+          className="rounded-lg bg-indigo-400 px-4 py-2 text-sm font-medium text-slate-900 transition hover:bg-indigo-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-900 disabled:opacity-40"
         >
           {splitting ? "Splitting..." : "Auto-split unassigned"}
         </button>
       </div>
 
-      {loading && <p className="text-sm text-slate-500">Loading...</p>}
+      {loading && <p className="text-sm text-slate-400">Loading...</p>}
       {!loading && tasks.length === 0 && (
-        <p className="text-sm text-slate-500">No tasks yet. Add tasks in the Checklist tab first.</p>
+        <p className="rounded-lg border border-dashed border-white/15 px-4 py-5 text-center text-sm text-slate-400">
+          No tasks yet. Add tasks in the Checklist tab first.
+        </p>
       )}
 
       <ul className="space-y-2">
         {tasks.map((t) => (
-          <li key={t.id} className="flex items-center gap-3 rounded-xl bg-white px-4 py-3 shadow-sm">
-            <span className={`flex-1 ${t.done ? "text-slate-400 line-through" : ""}`}>
+          <li key={t.id} className={`${card} flex items-center gap-3 px-4 py-3`}>
+            <span className={`flex-1 ${t.done ? "text-slate-500 line-through" : "text-slate-100"}`}>
               {t.title}
-              <span className="ml-2 text-xs text-slate-400">{t.section === "pre" ? "Pre-lab" : "Post-lab"}</span>
+              <span className="ml-2 rounded-full bg-white/10 px-2 py-0.5 text-xs text-slate-300 no-underline">
+                {t.section === "pre" ? "Pre-lab" : "Post-lab"}
+              </span>
             </span>
             <select
               value={t.assignee ?? ""}
               onChange={(e) => assign(t.id, e.target.value)}
               aria-label={`Assign ${t.title}`}
-              className="rounded-lg border border-slate-300 bg-white px-2 py-1 text-sm"
+              className="rounded-lg border border-white/15 bg-white/10 px-2.5 py-1.5 text-sm text-white outline-none transition focus:border-indigo-300 focus:ring-2 focus:ring-indigo-300/30"
             >
-              <option value="">Unassigned</option>
+              <option value="" className="text-slate-900">
+                Unassigned
+              </option>
               {people.map((p) => (
-                <option key={p} value={p}>{p}</option>
+                <option key={p} value={p} className="text-slate-900">
+                  {p}
+                </option>
               ))}
             </select>
           </li>
@@ -137,3 +163,6 @@ export default function Partners({ lab }: { lab: Lab }) {
     </div>
   );
 }
+
+       
+    
