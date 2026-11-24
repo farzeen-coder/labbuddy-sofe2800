@@ -6,6 +6,24 @@
 }
 
 body {
-  background: #f8fafc;
+  background: #1e293b;
   color: #0f172a;
+}
+
+html { scroll-behavior: smooth; }
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes grow-bar {
+  from { width: 0; }
+  to { width: 66.67%; }
+}
+.fade-up { animation: fade-up 0.5s ease-out both; }
+.bar-grow { animation: grow-bar 1.2s 0.4s ease-out both; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .fade-up, .bar-grow { animation: none; }
 }
