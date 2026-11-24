@@ -53,7 +53,7 @@ function Preview() {
             <span>2/3 done (67%)</span>
           </div>
           <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-white/10">
-            <div className="h-full w-2/3 rounded-full bg-gradient-to-r from-indigo-400 to-violet-400" />
+            <div className="bar-grow h-full w-2/3 rounded-full bg-gradient-to-r from-indigo-400 to-violet-400" />
           </div>
         </div>
 
@@ -148,7 +148,7 @@ export default function Home() {
         </nav>
 
         <section className="mt-14 grid items-center gap-12 lg:grid-cols-2">
-          <header>
+          <header className="fade-up">
             <p className="font-mono text-sm text-indigo-200">// for lab partners</p>
             <h1 className="mt-3 text-4xl font-semibold leading-tight tracking-tight text-white sm:text-5xl">
               Lab reports,
@@ -169,9 +169,15 @@ export default function Home() {
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" /> Deadline tracking
               </li>
             </ul>
+            <a
+              href="#start"
+              className="mt-8 inline-flex items-center gap-2 rounded-lg bg-indigo-400 px-5 py-2.5 font-medium text-slate-900 transition hover:bg-indigo-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            >
+              Get started <span aria-hidden="true">↓</span>
+            </a>
           </header>
 
-          <Preview />
+          <div className="fade-up" style={{ animationDelay: "0.15s" }}><Preview /></div>
         </section>
 
         {error && (
@@ -183,8 +189,8 @@ export default function Home() {
           </p>
         )}
 
-        <div className={`${error ? "mt-6" : "mt-16"} grid gap-6 md:grid-cols-2`}>
-          <form onSubmit={createLab} className={card}>
+        <div id="start" className={`${error ? "mt-6" : "mt-16"} grid scroll-mt-8 gap-6 md:grid-cols-2`}>
+          <form onSubmit={createLab} className={`${card} fade-up`} style={{ animationDelay: "0.25s" }}>
             <h2 className="text-lg font-semibold text-white">Start a new lab</h2>
             <label className={label}>
               Lab name
@@ -206,7 +212,7 @@ export default function Home() {
             </button>
           </form>
 
-          <form onSubmit={joinLab} className={card}>
+          <form onSubmit={joinLab} className={`${card} fade-up`} style={{ animationDelay: "0.35s" }}>
             <h2 className="text-lg font-semibold text-white">Join with a code</h2>
             <p className="text-sm leading-relaxed text-slate-300">
               Ask your partner for their 6-character lab code to open the same dashboard.

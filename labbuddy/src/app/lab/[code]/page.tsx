@@ -127,7 +127,7 @@ export default function LabPage() {
         ))}
       </div>
 
-      <div className="mt-6">
+      <div key={tab} className="mt-6 fade-up">
         {tab === "Checklist" && <Checklist lab={lab} />}
         {tab === "Partners" && <Partners lab={lab} />}
         {tab === "Deadlines" && <Deadlines lab={lab} />}
