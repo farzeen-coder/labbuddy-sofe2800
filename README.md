@@ -4,7 +4,7 @@
 
 🔗 **Live demo:** https://project-sprint-lab-report-buddy-raj.vercel.app/
 
-![LabBuddy checklist screenshot](docs/screenshot-checklist.png)
+
 
 ## Why we built this
 
@@ -59,15 +59,17 @@ We're students at Ontario Tech University, and this was our GDG x CS Project Spr
 
 | Name |         | What they worked on |
 
-| Yumna Siddiqui | _add here_ |
-| Jubaida Khatun | _add here_ |
-| Farzeen Farooq | _add here_ |
+| Yumna Siddiqui | Repository owner, Vercel deployment,
+                  Checklist tab , %Error Tab + Last minute design modifications |
+| Jubaida Khatun | Partners tab and the auto-split algorithm |
+| Farzeen Farooq | Project setup, database, home page and
+                  dashboard, Deadlines tab + Last minute changes |
 
 ## What we learned
 
 LabBuddy was our first real project. None of us had built a full web app before, so a lot of this sprint was figuring things out as we went: setting up Next.js, connecting a database, working in separate branches, and merging pull requests without breaking each other's code.
 
-We had big plans. We wanted a percent error calculator, graphs for lab data, and reminders when a deadline is close. Then midterms hit, and our schedules got brutal. We had to cut the scope down to the things that make the biggest difference day to day: a shared checklist, a fair split of work between partners, and deadlines in one place.
+We had big plans, including graphs for lab data and reminder notifications when a deadline is close. Then midterms hit and our schedules got brutal, so we focused on what makes the biggest difference day to day: a shared checklist, a fair split of work between partners, and deadlines in one place.
 
 If we did it again, we'd plan a smaller first version earlier and agree on roles from day one. The biggest thing we learned is that a small app that works beats a big idea that doesn't, and that building together teaches you more than building alone.
 
@@ -75,7 +77,6 @@ If we did it again, we'd plan a smaller first version earlier and agree on roles
 
 The features we didn't get to are the ones we're most excited about:
 
-- A percent error calculator for lab results
 - Graphs for lab data
 - Reminders when a deadline is approaching
 - Sharing course resources (manuals, code, CAD files) inside each lab
