@@ -8,8 +8,9 @@ import type { Lab } from "@/lib/types";
 import Checklist from "@/components/Checklist";
 import Partners from "@/components/Partners";
 import Deadlines from "@/components/Deadlines";
+import PercentError from "@/components/PercentError";
 
-const TABS = ["Checklist", "Partners", "Deadlines"] as const;
+const TABS = ["Checklist", "Partners", "Deadlines", "Percent error"] as const;
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
@@ -110,7 +111,7 @@ export default function LabPage() {
         {lab.partner1} &amp; {lab.partner2}. Share the code with your partner so they can join.
       </p>
 
-      <div role="tablist" className="mt-7 inline-flex gap-1 rounded-xl border border-white/10 bg-white/5 p-1">
+      <div role="tablist" className="mt-7 inline-flex max-w-full gap-1 overflow-x-auto rounded-xl border border-white/10 bg-white/5 p-1">
         {TABS.map((t) => (
           <button
             key={t}
@@ -130,9 +131,13 @@ export default function LabPage() {
         {tab === "Checklist" && <Checklist lab={lab} />}
         {tab === "Partners" && <Partners lab={lab} />}
         {tab === "Deadlines" && <Deadlines lab={lab} />}
+        {tab === "Percent error" && <PercentError />}
       </div>
     </Shell>
   );
 }
+
+
+      
      
    
