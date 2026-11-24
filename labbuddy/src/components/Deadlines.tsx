@@ -6,10 +6,21 @@ import type { Lab, Deadline } from "@/lib/types";
 import { daysLeft, labelFor, statusFor, type DeadlineStatus } from "@/lib/deadlines";
 
 const BADGE: Record<DeadlineStatus, string> = {
-  overdue: "bg-red-100 text-red-700",
-  soon: "bg-amber-100 text-amber-800",
-  ok: "bg-emerald-100 text-emerald-800",
+  overdue: "bg-red-500/15 text-red-200 ring-1 ring-red-400/30",
+  soon: "bg-amber-400/15 text-amber-200 ring-1 ring-amber-300/30",
+  ok: "bg-emerald-400/15 text-emerald-200 ring-1 ring-emerald-300/30",
 };
+
+const EDGE: Record<DeadlineStatus, string> = {
+  overdue: "border-l-red-400",
+  soon: "border-l-amber-300",
+  ok: "border-l-emerald-400",
+};
+
+const card = "rounded-2xl border border-white/10 bg-white/[0.07] shadow-xl shadow-black/10 backdrop-blur";
+
+const field =
+  "rounded-lg border border-white/15 bg-white/10 px-3.5 py-2.5 text-white outline-none transition placeholder:text-slate-400 focus:border-indigo-300 focus:bg-white/15 focus:ring-2 focus:ring-indigo-300/30 [color-scheme:dark]";
 
 const prettyDate = (d: string) =>
   new Date(d + "T00:00:00").toLocaleDateString(undefined, {
@@ -70,7 +81,7 @@ export default function Deadlines({ lab }: { lab: Lab }) {
   return (
     <div className="space-y-6">
       {items.length > 0 && (
-        <div className="flex flex-wrap gap-2 text-sm">
+        <div className="flex flex-wrap gap-2 text-sm font-medium">
           <span className={`rounded-full px-3 py-1 ${BADGE.overdue}`}>{overdueCount} overdue</span>
           <span className={`rounded-full px-3 py-1 ${BADGE.soon}`}>{soonCount} due soon</span>
           <span className={`rounded-full px-3 py-1 ${BADGE.ok}`}>
@@ -80,7 +91,7 @@ export default function Deadlines({ lab }: { lab: Lab }) {
       )}
 
       {error && (
-        <p role="alert" className="rounded-lg bg-red-50 px-4 py-2 text-red-700">
+        <p role="alert" className="rounded-lg border border-red-400/40 bg-red-500/10 px-4 py-2.5 text-sm text-red-200">
           {error}
         </p>
       )}
@@ -91,41 +102,47 @@ export default function Deadlines({ lab }: { lab: Lab }) {
           onChange={(e) => setTitle(e.target.value)}
           aria-label="Deadline title"
           placeholder="Lab 3 report due"
-          className="min-w-0 flex-1 rounded-lg border border-slate-300 bg-white px-3 py-2"
+          className={`${field} min-w-0 flex-1`}
         />
         <input
           type="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
           aria-label="Due date"
-          className="rounded-lg border border-slate-300 bg-white px-3 py-2"
+          className={field}
         />
-        <button className="rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-700">
+        <button className="rounded-lg bg-indigo-400 px-5 py-2.5 font-medium text-slate-900 transition hover:bg-indigo-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-900">
           Add
         </button>
       </form>
 
-      {loading && <p className="text-sm text-slate-500">Loading...</p>}
+      {loading && <p className="text-sm text-slate-400">Loading...</p>}
       {!loading && items.length === 0 && (
-        <p className="text-sm text-slate-500">No deadlines yet. Add your pre-lab and report due dates above.</p>
+        <p className="rounded-lg border border-dashed border-white/15 px-4 py-5 text-center text-sm text-slate-400">
+          No deadlines yet. Add your pre-lab and report due dates above.
+        </p>
       )}
 
       <ul className="space-y-2">
         {items.map((d) => {
           const days = daysLeft(d.due_date);
+          const status = statusFor(days);
           return (
-            <li key={d.id} className="flex items-center gap-3 rounded-xl bg-white px-4 py-3 shadow-sm">
+            <li
+              key={d.id}
+              className={`${card} flex items-center gap-3 border-l-4 px-4 py-3 ${EDGE[status]}`}
+            >
               <div className="flex-1">
-                <p className="font-medium">{d.title}</p>
-                <p className="text-sm text-slate-500">{prettyDate(d.due_date)}</p>
+                <p className="font-medium text-white">{d.title}</p>
+                <p className="text-sm text-slate-400">{prettyDate(d.due_date)}</p>
               </div>
-              <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${BADGE[statusFor(days)]}`}>
+              <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${BADGE[status]}`}>
                 {labelFor(days)}
               </span>
               <button
                 onClick={() => remove(d.id)}
                 aria-label={`Delete ${d.title}`}
-                className="text-slate-400 hover:text-red-600"
+                className="rounded-md px-1.5 text-slate-500 transition hover:bg-red-500/10 hover:text-red-300 focus-visible:text-red-300"
               >
                 ✕
               </button>
@@ -136,3 +153,9 @@ export default function Deadlines({ lab }: { lab: Lab }) {
     </div>
   );
 }
+
+
+ 
+   
+   
+   
